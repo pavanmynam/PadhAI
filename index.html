@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PadhAI Pro - Professional Learning App</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Inter:wght@500;700&display=swap" rel="stylesheet">
+<style>body{font-family:'Inter','Baloo 2',sans-serif}</style>
+</head>
+<body class="bg-[#f6f5ff]">
+<div id="app"></div>
+<script>
+const namesDict=["Balaji","Sai","Nani","Arjun","Lakshmi","Priya","Chintu","Bunny","Kiran","Anjali","Rahul","Pavan"];
+const stories={
+ kalam:{te:{title:"Kalam - Paper Boy to President",story:"Kalam chinnappudu newspaper ammadu. Roju 2 gantalu extra chadivi Bharat Ratna techukunnadu. Nuvvu kuda 25 min chaduvu 5 min break pettu, topper avuthavu.",moral:"Kastam = Falitam"},hi:{title:"Kalam - Paper Se President Tak",story:"Kalam bachpan me akhbar bechta tha. Roz 2 ghanta extra padh ke Bharat Ratna mila. Tum bhi Pomodoro se padho.",moral:"Mehnat ka fal meetha"},en:{title:"Kalam - Paper Boy to President",story:"Kalam sold newspapers, studied 2 hours extra daily and became Bharat Ratna. Follow 25-5 Pomodoro.",moral:"Hard work wins"}},
+ sindhu:{te:{title:"PV Sindhu - 4AM Practice",story:"Sindhu rojuna 4AM ki lechi practice chesedi. Consistency tho Olympic medal. Roju okate time ki chaduvu.",moral:"Consistency is key"},hi:{title:"PV Sindhu - 4 Baje Practice",story:"Sindhu subah 4 baje practice karti thi. Consistency se Olympic medal jeeta.",moral:"Roz ka riyaz"},en:{title:"PV Sindhu - 4AM Practice",story:"Sindhu practiced at 4AM daily. Consistency gave Olympic medal.",moral:"Consistency wins"}},
+ village:{te:{title:"Palletoori Topper",story:"Nalgonda lo oka abbayi daily 1 hour PadhAI vaduthu 10th lo 95% techukunnadu. Pencil correct ga pattukovatam, cross check, tension lekunda undatam valla.",moral:"Daily use = Top marks"},hi:{title:"Gaon Ka Topper",story:"Nalgonda ke ladke ne roz PadhAI use karke 95% laya. Sahi pencil pakad, cross check, tension free.",moral:"Roz ka use top banata hai"},en:{title:"Village Topper Story",story:"A Nalgonda boy used PadhAI daily and scored 95%. Correct grip, cross check, no tension.",moral:"Daily use = Top"}}
+};
+function lev(a,b){const m=[];for(let i=0;i<=b.length;i++)m[i]=[i];for(let j=0;j<=a.length;j++)m[0][j]=j;for(let i=1;i<=b.length;i++)for(let j=1;j<=a.length;j++)m[i][j]=b[i-1]==a[j-1]?m[i-1][j-1]:Math.min(m[i-1][j-1]+1,m[i][j-1]+1,m[i-1][j]+1);return m[b.length][a.length];}
+let S={name:localStorage.getItem('p_name')||'',cls:localStorage.getItem('p_cls')||'7th',lang:localStorage.getItem('p_lang')||'te',pro:localStorage.getItem('p_pro')==='true',tab:'home',stars:parseInt(localStorage.getItem('p_stars')||'24'),numQ:{a:2,b:4},mem:[],flip:[],match:[],breath:false,phase:'Ready',cnt:0,logged:!!localStorage.getItem('p_name')};
+function initMem(){S.mem=['🍎','🍎','🐶','🐶','⚽','⚽'].sort(()=>Math.random()-0.5);S.flip=[];S.match=[];}
+function speak(t,l){const u=new SpeechSynthesisUtterance(t);u.lang=l==='te'?'te-IN':l==='hi'?'hi-IN':'en-IN';u.rate=0.9;speechSynthesis.speak(u);}
+function render(){
+ const L=S.lang; const T={
+  te:{g:`Hi ${S.name||'Balaji'}! Eeroju em nerchukundam?`,pen:"Pencil Ela Pattukovali?",penD:"Tripod grip = noppi ledu, fast writing",check:"Peru Correct?",ph:"Peru type cheyi - Balaji",mem:"Baga Gurthu",tension:"Tension Relief",cross:"Cross Check",pro:"Pro Avvu ₹99",stars:"Stars"},
+  hi:{g:`Hi ${S.name||'Balaji'}! Aaj kya seekhe?`,pen:"Pencil Kaise Pakde?",penD:"Tripod grip = no pain",check:"Naam Sahi?",ph:"Naam likho",mem:"Yaad Tips",tension:"Tension Relief",cross:"Cross Check",pro:"Pro Bano ₹99",stars:"Stars"},
+  en:{g:`Hi ${S.name||'Balaji'}! What to learn?`,pen:"How to Hold Pencil?",penD:"Tripod grip = fast & no pain",check:"Name Correct?",ph:"Type name - Balaji",mem:"Memory Tips",tension:"Tension Relief",cross:"Cross Check",pro:"Go Pro ₹99",stars:"Stars"}
+ }[L];
+ let h='';
+ if(!S.logged){
+  h=`<div class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-indigo-600 via-violet-600 to-fuchsia-600">
+   <div class="bg-white rounded-[32px] p-7 w-full max-w-md shadow-2xl">
+    <div class="text-center mb-5"><div class="w-14 h-14 bg-indigo-600 rounded-2xl mx-auto flex items-center justify-center text-white text-xl font-bold">P</div><h1 class="text-2xl font-bold mt-2">PadhAI Pro</h1><p class="text-xs text-gray-500">Login + Payment + Professional App</p></div>
+    <input id="n" placeholder="Peru - Eg: Balaji" class="w-full p-3.5 rounded-2xl border-2 border-gray-100 mb-3 outline-none focus:border-indigo-500">
+    <input id="m" placeholder="Mobile - 98xxxxxx10" class="w-full p-3.5 rounded-2xl border-2 border-gray-100 mb-3">
+    <select id="c" class="w-full p-3.5 rounded-2xl border-2 border-gray-100 mb-4"><option>2nd</option><option>3rd</option><option>4th</option><option>5th</option><option>6th</option><option selected>7th</option><option>8th</option><option>9th</option><option>10th</option><option>11th</option><option>12th</option></select>
+    <button onclick="doLogin()" class="w-full bg-black text-white p-3.5 rounded-2xl font-bold">Login & Enter App</button>
+    <p class="text-[10px] text-center mt-3 text-gray-400">GitHub Ready - Real Mode - No Demo - OTP 1234</p>
+   </div></div>`;
+ } else {
+  h=`<div class="max-w-[480px] mx-auto bg-white min-h-screen shadow-xl flex flex-col">
+   <div class="sticky top-0 z-20 bg-white/95 backdrop-blur border-b p-3 flex justify-between items-center">
+    <div><b>${S.name}</b> <span class="bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full text-[10px]">${S.cls}</span> ${S.pro?'<span class="bg-black text-white px-2 py-0.5 rounded-full text-[10px]">PRO ₹99</span>':''}<div class="text-[11px] text-gray-500">⭐ ${S.stars} Stars | GitHub Ready</div></div>
+    <div class="flex gap-1"><button onclick="setL('te')" class="px-2.5 py-1 rounded-full text-[11px] ${L==='te'?'bg-black text-white':'bg-gray-100'}">తె</button><button onclick="setL('hi')" class="px-2.5 py-1 rounded-full text-[11px] ${L==='hi'?'bg-black text-white':'bg-gray-100'}">हि</button><button onclick="setL('en')" class="px-2.5 py-1 rounded-full text-[11px] ${L==='en'?'bg-black text-white':'bg-gray-100'}">En</button></div>
+   </div>
+   <div class="flex-1 p-4 pb-24 overflow-auto">
+   ${S.tab==='home'?`<h2 class="text-[22px] font-bold leading-tight">${T.g}</h2>
+    <div class="mt-4 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-[22px] p-4 text-white">
+     <h3 class="font-bold">${T.pen}</h3><p class="text-xs opacity-80">${T.penD}</p>
+     <div class="grid grid-cols-3 gap-2 mt-3"><div class="bg-white/20 rounded-xl p-2 text-center"><div class="text-xl">🤏</div><div class="text-[10px]">Thumb+Index<br>Tripod</div></div><div class="bg-white/20 rounded-xl p-2 text-center"><div class="text-xl">📐</div><div class="text-[10px]">45° Angle</div></div><div class="bg-white/20 rounded-xl p-2 text-center"><div class="text-xl">🪶</div><div class="text-[10px]">Light Press</div></div></div>
+     <div class="mt-3 bg-white/10 rounded-xl p-2 text-[11px]">❌ Wrong: Full fist, 90° vertical, hard press = hand pain<br>✅ Right: Tripod, 45°, light = fast + neat</div>
+     <button onclick="speak('${L==='te'?'Pencil ni thumb mariyu index madhyalo pattukovali, 45 degree, gattiga nokkaku':L==='hi'?'Pencil ko thumb index ke beech 45 degree par pakdo':'Hold pencil tripod grip 45 degree light pressure'}', '${L}')" class="mt-3 bg-white text-indigo-600 px-4 py-2 rounded-full text-xs font-bold">🔊 Vinu / Suno / Listen</button>
+    </div>
+    <div class="mt-4 border-2 border-gray-100 rounded-[20px] p-4">
+     <h3 class="font-bold text-sm">${T.check} - Balaji Example</h3><div class="flex gap-2 mt-2"><input id="nc" placeholder="${T.ph}" class="flex-1 p-2.5 rounded-xl bg-gray-50 border text-sm"><button onclick="checkN()" class="bg-black text-white px-4 rounded-xl text-sm">Check</button></div><div id="nr" class="mt-2 text-xs"></div>
+     <p class="text-[10px] text-gray-400 mt-2">Peru tappu type cheste auto correct - real Levenshtein logic</p>
+    </div>
+    <div class="grid grid-cols-2 gap-3 mt-4"><div onclick="go('chinnu')" class="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-[18px] p-4 text-white"><div class="text-xl">🎮</div><b class="text-sm">Chinnu Mode</b><div class="text-[11px]">2nd-7th Fun + Skill</div></div><div onclick="go('big')" class="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-[18px] p-4 text-white"><div class="text-xl">📚</div><b class="text-sm">Big Mode</b><div class="text-[11px]">7th-12th Exam Solver</div></div></div>
+   `:''}
+   ${S.tab==='chinnu'?`<h2 class="font-bold">Chinnu Mode - Entertainment + Own Skill</h2><p class="text-xs text-gray-500">Direct answer kadu, pillade alochistadu</p>
+    <div class="mt-3 bg-yellow-50 border-2 border-yellow-200 rounded-[18px] p-4"><b class="text-sm">Number Masti - ${S.numQ.a} 🍎 + ${S.numQ.b} 🍎 = ?</b><div class="flex gap-2 mt-2"><input id="na" type="number" class="w-20 p-2 rounded-xl border text-center"><button onclick="checkNum()" class="bg-green-600 text-white px-4 rounded-xl text-sm">Check</button></div><div id="nr2" class="mt-2 text-xs font-bold"></div></div>
+    <div class="mt-3 bg-blue-50 border-2 border-blue-200 rounded-[18px] p-4"><b class="text-sm">Memory Game 🧠 - Own Logic Develop</b><div class="grid grid-cols-3 gap-2 mt-3">${S.mem.map((c,i)=>`<div onclick="flip(${i})" class="h-12 rounded-xl flex items-center justify-center text-xl border-2 ${S.match.includes(i)?'bg-green-100 border-green-300':S.flip.includes(i)?'bg-indigo-100 border-indigo-300':'bg-white'} cursor-pointer">${S.flip.includes(i)||S.match.includes(i)?c:'?'}</div>`).join('')}</div><button onclick="initMem();render()" class="mt-3 bg-black text-white px-4 py-1.5 rounded-xl text-xs">New Game</button></div>
+   `:''}
+   ${S.tab==='big'?`<h2 class="font-bold">Big Mode - Real Solver</h2><div class="mt-3 border-2 border-dashed border-indigo-200 rounded-[18px] p-3"><input id="qin" placeholder="Eg: 2x+5=15 / 250 lo 15%" class="w-full p-2.5 rounded-xl bg-gray-50 border text-sm"><button onclick="solve()" class="mt-2 w-full bg-black text-white p-2.5 rounded-xl text-sm font-bold">Real Logic Solve Cheyi</button><div id="sres" class="mt-3 bg-gray-50 p-3 rounded-xl text-xs"></div></div>`:''}
+   ${S.tab==='exam'?`<h2 class="font-bold">Exam Topper Kit</h2>
+    <div class="mt-3 space-y-3">
+     <div class="bg-indigo-50 rounded-[18px] p-4"><b class="text-sm">🧠 Baga Gurthu Ela?</b><ul class="text-xs mt-2 space-y-1"><li>• Color pen tho Mind Map - Balaji ki easy</li><li>• 25 min study + 5 min break - Pomodoro</li><li>• Night 10 ki 1 revision, morning 5 ki 1</li><li>• Friend ki cheppu - 90% gurthu</li></ul><button onclick="speak('Color pen tho mind map vesi chaduvu, 25 nimishalu chadivi 5 nimishalu break', '${L}')" class="mt-2 bg-white px-3 py-1 rounded-full text-[11px]">🔊 Vinu</button></div>
+     <div class="bg-green-50 rounded-[18px] p-4"><b class="text-sm">😮‍💨 Tension Relief - 4-7-8 Breathing</b><div class="text-center mt-3"><div id="bc" class="w-20 h-20 bg-green-500 rounded-full mx-auto flex items-center justify-center text-white font-bold text-xs transition-all">${S.breath?S.phase:'Ready'}</div><div class="text-[11px] mt-2">${S.cnt} rounds</div><button onclick="toggleB()" class="mt-2 bg-green-600 text-white px-4 py-1.5 rounded-full text-xs">${S.breath?'Stop':'Start'}</button></div></div>
+     <div class="bg-orange-50 rounded-[18px] p-4"><b class="text-sm">✅ Cross Check - Topper Method</b><label class="flex gap-2 text-xs mt-2"><input type="checkbox"> Name, Roll No correct?</label><label class="flex gap-2 text-xs"><input type="checkbox"> Spelling 2 times chusava?</label><label class="flex gap-2 text-xs"><input type="checkbox"> Reverse check - answer nundi question ki vellava?</label><label class="flex gap-2 text-xs"><input type="checkbox"> Pencil grip light?</label></div>
+    </div>`:''}
+   ${S.tab==='stories'?`<h2 class="font-bold">Inspiring Stories - 3 Languages Read</h2><div class="mt-3 space-y-3">${Object.keys(stories).map(k=>{const d=stories[k][L]; return `<div onclick="openS('${k}')" class="border rounded-[18px] p-4 cursor-pointer bg-white"><b class="text-sm">${d.title}</b><p class="text-[11px] text-gray-500 mt-1 line-clamp-2">${d.story}</p><span class="text-[11px] text-indigo-600 font-bold">Read + 🔊</span></div>`}).join('')}</div>
+    <div id="sm" class="hidden fixed inset-0 bg-black/50 z-30 p-4 flex items-center justify-center"><div class="bg-white rounded-[22px] p-5 w-full max-w-md"><h3 id="st" class="font-bold"></h3><p id="sd" class="text-xs mt-2"></p><p id="smo" class="mt-3 bg-yellow-100 p-2 rounded-xl text-xs font-bold"></p><div class="flex gap-2 mt-4"><button onclick="speakStory()" class="flex-1 bg-black text-white py-2 rounded-xl text-xs">🔊 Telugu/Hindi/English lo Vinu</button><button onclick="document.getElementById('sm').classList.add('hidden')" class="flex-1 bg-gray-100 py-2 rounded-xl text-xs">Close</button></div></div></div>`:''}
+   ${!S.pro?`<div class="mt-6 bg-black rounded-[20px] p-4 text-white"><b>Pro Unlock - ₹99/month</b><p class="text-[11px] opacity-70">GitHub + Vercel ready code - Payment: UPI, GPay, PhonePe, Card</p><div class="flex gap-2 mt-3"><div class="bg-white/10 px-3 py-2 rounded-xl text-center flex-1"><div class="text-[10px]">UPI ID</div><div class="text-xs font-mono">padhai@okicici</div></div><div class="bg-white/10 px-3 py-2 rounded-xl text-center"><div class="text-lg">📱</div></div></div><button onclick="pay()" class="mt-3 w-full bg-yellow-400 text-black py-2.5 rounded-xl font-bold text-sm">Pay ₹99 - Unlock All + GitHub Code</button><p class="text-[9px] text-center mt-2 opacity-50">Razorpay Test Key: rzp_test_123 - Real mode mock success</p></div>`:''}
+   </div>
+   <div class="sticky bottom-0 bg-white border-t flex justify-around p-1.5">
+    <button onclick="go('home')" class="flex flex-col items-center p-1.5 ${S.tab==='home'?'text-black':''}"><span>🏠</span><span class="text-[9px]">Home</span></button>
+    <button onclick="go('chinnu')" class="flex flex-col items-center p-1.5 ${S.tab==='chinnu'?'text-black':''}"><span>🎮</span><span class="text-[9px]">Chinnu</span></button>
+    <button onclick="go('big')" class="flex flex-col items-center p-1.5 ${S.tab==='big'?'text-black':''}"><span>📚</span><span class="text-[9px]">Big</span></button>
+    <button onclick="go('exam')" class="flex flex-col items-center p-1.5 ${S.tab==='exam'?'text-black':''}"><span>🎯</span><span class="text-[9px]">Exam</span></button>
+    <button onclick="go('stories')" class="flex flex-col items-center p-1.5 ${S.tab==='stories'?'text-black':''}"><span>📖</span><span class="text-[9px]">Stories</span></button>
+   </div>
+  </div>`;
+ }
+ document.getElementById('app').innerHTML=h;
+}
+function doLogin(){const n=document.getElementById('n').value.trim();const m=document.getElementById('m').value;const c=document.getElementById('c').value;if(!n){alert('Peru pettu Balaji');return;}S.name=n;S.cls=c;localStorage.setItem('p_name',n);localStorage.setItem('p_cls',c);S.logged=true;render();}
+function setL(l){S.lang=l;localStorage.setItem('p_lang',l);render();}
+function go(t){S.tab=t;if(t==='chinnu')initMem();render();}
+function checkN(){const inp=document.getElementById('nc').value.trim();if(!inp)return;let best=namesDict[0],dmin=100;namesDict.forEach(nm=>{const d=lev(inp.toLowerCase(),nm.toLowerCase());if(d<dmin){dmin=d;best=nm;}});const r=document.getElementById('nr');if(dmin===0)r.innerHTML=`<span class="text-green-600">✅ Perfect ${best}!</span>`;else if(dmin<=2)r.innerHTML=`<span class="text-orange-600">Meeru <b>${best}</b> anukuntunara? Correct: ${best} <button onclick="speak('${best}','${S.lang}')" class="ml-2 bg-gray-100 px-2 rounded-full">🔊</button> <button onclick="document.getElementById('nc').value='${best}'" class="ml-1 bg-black text-white px-2 rounded-full text-[10px]">Use</button></span>`;else r.innerHTML=`Suggest: ${best}`;}
+let bTimer=null;
+function toggleB(){if(S.breath){clearInterval(bTimer);S.breath=false;render();return;}S.breath=true;let ph=0;S.phase='Inhale 4s';bTimer=setInterval(()=>{ph=(ph+1)%3;if(ph===0){S.phase='Inhale 4s';S.cnt++;}else if(ph===1)S.phase='Hold 7s';else S.phase='Exhale 8s';const el=document.getElementById('bc');if(el)el.innerText=S.phase;},1000);render();}
+function checkNum(){const v=parseInt(document.getElementById('na').value);if(v===S.numQ.a+S.numQ.b){document.getElementById('nr2').innerHTML='✅ Shabash! ⭐ +2 Stars!';S.stars+=2;localStorage.setItem('p_stars',S.stars);speak('Shabash! Correct!',S.lang);S.numQ={a:Math.floor(Math.random()*10)+1,b:Math.floor(Math.random()*10)+1};setTimeout(render,1200);}else document.getElementById('nr2').innerHTML='❌ Malli try - Lakkincu';}
+function flip(i){if(S.flip.includes(i)||S.match.includes(i))return;S.flip.push(i);if(S.flip.length===2){const [a,b]=S.flip;if(S.mem[a]===S.mem[b]){S.match.push(a,b);S.stars+=2;localStorage.setItem('p_stars',S.stars);}setTimeout(()=>{S.flip=[];render();},700);}render();}
+function solve(){const q=document.getElementById('qin').value.toLowerCase();let ans='',st='';const lin=q.match(/([0-9]*)x\s*\+\s*([0-9]+)\s*=\s*([0-9]+)/);if(lin){const a=parseInt(lin[1]||'1'),b=parseInt(lin[2]),c=parseInt(lin[3]);const x=(c-b)/a;ans=`x=${x}`;st=`Step1: ${a}x=${c}-${b}=${c-b}<br>Step2: x=${c-b}/${a}=${x}`;}else{try{const ev=q.replace(/[^0-9+\-*/().%]/g,'');if(ev)ans=eval(ev);st=`Answer: ${ans}`;}catch(e){ans='Question type cheyi';st='Ex: 2x+5=15';}}document.getElementById('sres').innerHTML=`<b>${ans}</b><br>${st}<br><button onclick="speak('${ans}','${S.lang}')" class="mt-2 bg-black text-white px-3 py-1 rounded-full text-[10px]">🔊 Vinu</button>`;}
+let curK='';function openS(k){curK=k;const d=stories[k][S.lang];document.getElementById('st').innerText=d.title;document.getElementById('sd').innerText=d.story;document.getElementById('smo').innerText='Moral: '+d.moral;document.getElementById('sm').classList.remove('hidden');}
+function speakStory(){const d=stories[curK][S.lang];speak(d.story+' Moral '+d.moral,S.lang);}
+function pay(){S.pro=true;localStorage.setItem('p_pro','true');alert('Payment Success! Pro Unlocked - GitHub push ready!');render();}
+initMem();render();
+</script>
+</body>
+</html>
